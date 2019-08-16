@@ -31,22 +31,24 @@ class ConfigObjProxy(_ConfigProxy):
 
     def __init__(self, filename: pathlib.Path):
         self.conf = self.ConfigObj(filename)
-        self.
+        self.curr = self.conf
 
     def __setitem__(self, k: flattener.FlatKey, v: str) -> None:
-        pass
+        self.curr[k] = v
+        self.conf.write()
 
     def compose_key(self, k) -> None:
-        pass
+        self.curr = self.curr[k]
 
     def __delitem__(self, k: flattener.FlatKey) -> None:
-        pass
+        del self.curr[k]
 
     def __getitem__(self, k: flattener.FlatKey) -> "_ConfigProxy":
-        pass
+        self.compose_key(k)
+        return self
 
     def __str__(self) -> str:
-        pass
+        return str(self.curr)
 
     def ready(self) -> bool:
         return True
